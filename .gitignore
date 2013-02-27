@@ -1,0 +1,6 @@
+config.json
+hosts.json
+*.swo
+*.swp
+tmp/*
+!tmp/.gitfile
