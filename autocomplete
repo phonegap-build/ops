@@ -1,0 +1,5 @@
+function _build_ops_completion() {
+  ops -T | awk '{ print $2 }'
+}
+
+complete -W "$(_build_ops_completion)" ops
