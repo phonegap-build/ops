@@ -1,0 +1,5 @@
+en:
+  messages:
+    reload_bash: "To have autocompletion for new/modified hosts reload
+                 your bash profile/configs. Use `$ source [ location to
+                 .bashrc or .bash_profile ]` on most machines."

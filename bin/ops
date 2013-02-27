@@ -1,0 +1,96 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'bundler'
+rescue LoadError
+  require 'rubygems'
+  require 'bundler'
+end
+
+require 'json'
+require 'pp'
+require 'etc'
+require 'net/ssh'
+require 'pathname'
+
+def exit_failure( reason="", code=1 )
+  puts reason; exit
+end
+
+def cwd
+  File.join( File.dirname( Pathname.new( $0 ).realpath ), ".." )
+end
+
+Dir.chdir( cwd ) {
+  Bundler.setup
+  require 'aws-sdk'
+  require 'i18n'
+  require 'rake'
+  require File.join( cwd, '/lib/host.rb' )
+}
+
+@generated_hosts_file = File.join( cwd, 'tmp', "hosts.json" )
+@hosts_file = File.join( cwd, "hosts.json" )
+@config_file = File.join( cwd, "config.json" )
+
+I18n.load_path << Dir[ File.join( cwd, "res", "strings/**/*.yml" ) ]
+
+@hosts = []
+
+begin
+  config = JSON.parse File.read( @config_file )
+rescue JSON::ParserError
+  exit_failure( "Error parsing config file: #{ @config_file }." )
+end
+
+begin
+  hosts_list = JSON.parse File.read( @generated_hosts_file )
+  hosts_list.each{ | n, i | @hosts << Host.new( n, i, config ) }
+rescue JSON::ParserError
+  exit_failure( "Error parsing hosts file: #{ @generated_hosts_file }." )
+end
+
+@ec2 = AWS::EC2.new(
+  :access_key_id => config[ "AWS" ][ "AccessKeyId" ],
+    :secret_access_key => config[ "AWS" ][ "SecretAccessKey" ] )
+
+Rake.application.init( "build-ops" )
+
+Dir.glob( File.join( cwd, "tasks", "**", "*" ) ).each do | f |
+  require f
+end
+
+additional_hosts = read_hosts @hosts_file
+additional_hosts.each { | n , i | @hosts << i }
+
+@hosts.each do | h |
+
+  namespace h.alias do
+
+    desc "ssh in to host"
+    task "ssh" do
+      h.shell!
+    end
+  end
+
+end
+
+begin
+  Rake.application.top_level
+rescue => e
+  puts "Failed to call task: #{ e.message }"
+end
+
+exit
+
+exit_failure( "Error host not found: #{ host }." ) if !hosts.has_key? host
+
+host = Host.new( host, hosts[ host ], config )
+
+puts "Connecting to: #{ host.alias }"
+
+begin
+  host.shell!
+rescue => e
+  exit_failure e.message
+end
