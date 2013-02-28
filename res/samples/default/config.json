@@ -1,0 +1,7 @@
+{
+  "IdentityLocations" : [ "~/.ssh" ],
+  "AWS" : {
+    "AccessKeyId" : "",
+    "SecretAccessKey" : ""
+  }
+}
