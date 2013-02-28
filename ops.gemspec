@@ -1,7 +1,5 @@
 files = `git ls-files`.split("\n")
 
-puts files
-
 Gem::Specification.new do |s|
   s.name        = 'Ops'
   s.version     = '0.0.1'
