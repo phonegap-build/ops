@@ -1,7 +1,0 @@
-{
-  "IdentityLocations" : [ "~/.ec2", "~/.ssh" ],
-  "AWS" : {
-    "AccessKeyId" : "",
-    "SecretAccessKey" : ""
-  }
-}
