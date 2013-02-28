@@ -4,3 +4,4 @@ hosts.json
 *.swp
 tmp/*
 !tmp/.gitfile
+*.gem
