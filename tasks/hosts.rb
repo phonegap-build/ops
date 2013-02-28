@@ -47,7 +47,9 @@ namespace "hosts" do
     puts "  => using #{ identity }" unless identity.nil?
 
     hosts = {}
-    hosts = read_hosts( @hosts_file ) if File.exists? @hosts_file
+    hosts_file = File.join( pwd, "hosts.json" )
+
+    hosts = read_hosts( hosts_file ) if File.exists? hosts_file
 
     exit_failure( "Error: #{ host } is already defined" ) if
       hosts.has_key? host
@@ -58,7 +60,7 @@ namespace "hosts" do
       'IdentityFile' => identity
     }
     
-    File.open( @hosts_file, 'w' ) { | f | f.write( hosts.to_json ) }
+    File.open( hosts_file, 'w' ) { | f | f.write( hosts.to_json ) }
   end
 
   def read_hosts file

@@ -18,7 +18,7 @@ class Host
     unless @ssh_pem.nil?
       unless @pem_dirs.nil?
         @pem_dirs.each do | dir |
-           f = File.expand_path File.join( dir, "#{ @ssh_pem}*" )
+           f = File.expand_path File.join( dir, "#{ @ssh_pem }*" )
            glob = Dir.glob( f )
            @ssh_pem = glob.first unless glob.empty?
         end

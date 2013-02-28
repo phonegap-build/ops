@@ -5,4 +5,8 @@ en:
                  .bashrc or .bash_profile ]` on most machines."
   ops:
     init:
-      empty_name: "project name not provided"
+      desc: "Initialize a new project"
+      no_name: "project name not provided"
+
+  host:
+    ssh: "SSH into %{host}"

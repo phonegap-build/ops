@@ -6,18 +6,30 @@ def exit_failure( reason="", code=1 )
   puts reason; exit
 end
 
-root_dir = File.dirname( File.dirname( __FILE__ ) )
-root_tasks_dir = File.join( root_dir, "tasks", "**", "*" )
-puts root_tasks_dir
+def root_dir
+  File.dirname( File.dirname( __FILE__ ) )
+end unless defined? :root_dir
 
-pwd = Dir.pwd
-
-Rake.application.init( "build-ops" )
-
-Dir.glob( root_tasks_dir ).each do | f |
-  puts "requiring #{ f }"
-  require f
+def pwd_dir
+  Dir.pwd
 end
+
+root_tasks_dir = File.join( root_dir, "tasks", "**", "*" )
+pwd_tasks_dir = File.join( pwd_dir, "tasks", "**", "*" )
+
+Rake.application.init( File.basename( $0 ) )
+
+begin
+  Dir.glob( root_tasks_dir ).each do | f |
+    require f
+  end
+rescue => e
+  puts e
+end
+
+Dir.glob( pwd_tasks_dir ).each do | f |
+  require f
+end if File.directory? pwd_tasks_dir
 
 begin
   Rake.application.top_level
@@ -26,57 +38,3 @@ rescue => e
 end
 
 exit
-
-@hosts.each do | h |
-
-  namespace h.alias do
-
-    desc "ssh in to host"
-    task "ssh" do
-      h.shell!
-    end
-  end
-
-end
-
-
-additional_hosts = read_hosts @hosts_file
-additional_hosts.each { | n , i | @hosts << i }
-
-@generated_hosts_file = File.join( cwd, 'tmp', "hosts.json" )
-@hosts_file = File.join( cwd, "hosts.json" )
-@config_file = File.join( cwd, "config.json" )
-
-I18n.load_path << Dir[ File.join( cwd, "res", "strings/**/*.yml" ) ]
-
-@hosts = []
-
-begin
-  config = JSON.parse File.read( @config_file )
-rescue JSON::ParserError
-  exit_failure( "Error parsing config file: #{ @config_file }." )
-end
-
-begin
-  hosts_list = JSON.parse File.read( @generated_hosts_file )
-  hosts_list.each{ | n, i | @hosts << Host.new( n, i, config ) }
-rescue JSON::ParserError
-  exit_failure( "Error parsing hosts file: #{ @generated_hosts_file }." )
-end
-
-@ec2 = AWS::EC2.new(
-  :access_key_id => config[ "AWS" ][ "AccessKeyId" ],
-    :secret_access_key => config[ "AWS" ][ "SecretAccessKey" ] )
-
-
-exit_failure( "Error host not found: #{ host }." ) if !hosts.has_key? host
-
-host = Host.new( host, hosts[ host ], config )
-
-puts "Connecting to: #{ host.alias }"
-
-begin
-  host.shell!
-rescue => e
-  exit_failure e.message
-end

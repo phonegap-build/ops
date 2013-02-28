@@ -9,6 +9,7 @@ end
   require 'json'
   require 'etc'
   require 'pathname'
+  require 'pp'
 
 # external gems
   require 'net/ssh'
@@ -19,5 +20,11 @@ end
 # local includes
   require 'host'
 
+def root_dir
+  File.dirname( File.dirname( __FILE__ ) )
+end unless defined? root_dir
+
 # load all i18n strings
-I18n.load_path << Dir[ File.join( "res", "strings/**/*.yml" ) ]
+string_search = File.join( root_dir, "res", "strings/**/*.yml" )
+string_files = Dir[ string_search ]
+I18n.load_path << string_files
