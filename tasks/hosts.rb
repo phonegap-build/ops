@@ -39,6 +39,7 @@ namespace "hosts" do
     hostname = ENV[ 'hostname' ]
     host = ENV[ 'host' ]
     user = ENV[ 'user' ]
+    type = ENV[ 'type' ] || "default"
     identity = File.basename( ENV[ 'identity' ] )
 
 
@@ -57,7 +58,8 @@ namespace "hosts" do
     hosts[ host ] = {
       'HostName' => hostname,
       'User' => user,
-      'IdentityFile' => identity
+      'IdentityFile' => identity,
+      "Type" => "type"
     }
     
     File.open( hosts_file, 'w' ) { | f | f.write( hosts.to_json ) }
@@ -72,7 +74,7 @@ namespace "hosts" do
 
     begin
       hosts_list = JSON.parse File.read( file )
-      hosts_list.each{ | n, i | hosts[ n ] =  Host.new( n, i, config ) }
+      hosts_list.each{ | n, i | hosts[ n ] =  Host::Default.new( n, i, config ) }
     rescue JSON::ParserError => e
       exit_failure( "Error parsing hosts file: #{ file }. #{ e.message }" )
     end

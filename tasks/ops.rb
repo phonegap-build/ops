@@ -53,12 +53,18 @@ if ( File.exists? hosts_file )
     exit_failure( "Error: #{ e.message }" )
   end
 
-  json.each { | h, i | $hosts[ h ] = Host.new( h, i, $config ) }
+  json.each do | h, i |
+    class_name = i[ "Type" ]
+    puts Host.const_get( class_name )
+    #$hosts[ h ] = Host::Default.new( h, i, $config )
+  end
 end
 
 ## Host Tasks
 
 $hosts.each do | i, host |
+
+  next unless host.type == :default
 
   namespace host.alias do
 

@@ -18,7 +18,8 @@ end
   require 'aws-sdk'
 
 # local includes
-  require 'host'
+  require 'host/default'
+  require 'host/e_c_2'
 
 def root_dir
   File.dirname( File.dirname( __FILE__ ) )

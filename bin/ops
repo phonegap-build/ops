@@ -17,10 +17,20 @@ end
 root_tasks_dir = File.join( root_dir, "tasks", "**", "*" )
 pwd_tasks_dir = File.join( pwd_dir, "tasks", "**", "*" )
 
+bootstrap_tasks = [ 'ops.rb' ]
+
+tasks = Dir.glob( root_tasks_dir ).reject do |r|
+  bootstrap_tasks.include? File.basename(r)
+end
+
 Rake.application.init( File.basename( $0 ) )
 
 begin
-  Dir.glob( root_tasks_dir ).each do | f |
+  bootstrap_tasks.each do | f |
+    require File.join( root_dir, 'tasks', f )
+  end
+
+  tasks.each do | f |
     require f
   end
 rescue => e
