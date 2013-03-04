@@ -14,32 +14,27 @@ def pwd_dir
   Dir.pwd
 end
 
-root_tasks_dir = File.join( root_dir, "tasks", "**", "*" )
-pwd_tasks_dir = File.join( pwd_dir, "tasks", "**", "*" )
-
-bootstrap_tasks = [ 'ops.rb' ]
-
-tasks = Dir.glob( root_tasks_dir ).reject do |r|
-  bootstrap_tasks.include? File.basename(r)
-end
+bootstrap_files = [
+  File.join( 'tasks', 'tasks.rb' ) ]
 
 Rake.application.init( File.basename( $0 ) )
 
 begin
-  bootstrap_tasks.each do | f |
-    require File.join( root_dir, 'tasks', f )
-  end
-
-  tasks.each do | f |
-    require f
+  Dir.chdir( root_dir ) do
+    bootstrap_files.each do | f |
+      puts "loading => #{ f }"
+      require f
+    end
   end
 rescue => e
   puts e
 end
 
-Dir.glob( pwd_tasks_dir ).each do | f |
-  require f
-end if File.directory? pwd_tasks_dir
+Dir.chdir( pwd_dir ) do
+  bootstrap_files.each do | f |
+    require f if File.exists? f
+  end
+end
 
 begin
   Rake.application.top_level
