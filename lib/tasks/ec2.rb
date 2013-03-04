@@ -39,6 +39,10 @@ namespace "hosts" do
 
       host_file = File.join( tmp_dir, 'hosts.json' )
       File.open( host_file, 'w' ) { | f |  f.write( hosts.to_json ) }
+
+      if Ops::has_bash?
+        `source #{ File.join( root_dir, 'autocomplete' ) }`
+      end
     end
   end
 end

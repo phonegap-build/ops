@@ -1,7 +1,7 @@
 module Host
   class Default
 
-    attr_reader :alias
+    attr_reader :alias, :host_name
 
     def initialize( host = 'unspecified', info = {}, opts = {} )
       @alias = host
@@ -16,6 +16,10 @@ module Host
 
     def type
       @type.to_sym
+    end
+
+    def host_name
+      @ssh_host
     end
 
     def shell!( opts = nil )
