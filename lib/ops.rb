@@ -20,12 +20,9 @@ end
 # local includes
   require 'host/default'
   require 'host/e_c_2'
-
-def root_dir
-  File.dirname( File.dirname( __FILE__ ) )
-end unless defined? root_dir
+  require 'ops/common'
 
 # load all i18n strings
-string_search = File.join( root_dir, "res", "strings/**/*.yml" )
+string_search = File.join( Ops::root_dir, "res", "strings/**/*.yml" )
 string_files = Dir[ string_search ]
 I18n.load_path << string_files

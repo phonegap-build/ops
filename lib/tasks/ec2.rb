@@ -32,7 +32,7 @@ namespace "hosts" do
           "Type" => "EC2" }
       end
 
-      tmp_dir = File.join( pwd_dir, 'tmp' )
+      tmp_dir = File.join( Ops::pwd_dir, 'tmp' )
       Dir.mkdir( tmp_dir ) unless File.directory? tmp_dir
 
       host_file = File.join( tmp_dir, 'hosts.json' )

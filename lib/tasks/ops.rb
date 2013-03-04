@@ -12,7 +12,7 @@ task "init" do
   fail I18n.t( "ops.init.no_name" ) if name.nil? || name.empty?
 
   FileUtils.cp_r( File.join( root_dir, "res", "samples", "default" ),
-    File.join( pwd, name ) )
+    File.join( Ops::pwd_dir, name ) )
 end
 
 # Host Configuration
@@ -20,10 +20,10 @@ end
 ## Load configuration
 
 host_files = [
-  File.join( pwd_dir, 'hosts.json' ),
-  File.join( pwd_dir, 'tmp', 'hosts.json' ) ]
+  File.join( Ops::pwd_dir, 'hosts.json' ),
+  File.join( Ops::pwd_dir, 'tmp', 'hosts.json' ) ]
 
-config_file = File.join( pwd_dir, 'config.json' )
+config_file = File.join( Ops::pwd_dir, 'config.json' )
 
 $hosts = {} unless defined? $hosts
 
