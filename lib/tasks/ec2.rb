@@ -1,19 +1,21 @@
-## Sync EC2 Hosts
-
 namespace "hosts" do
 
   namespace "ec2" do
 
+    ## Sync EC2 Hosts
     desc "hosts.sync"
     task "sync" do
-      aws_config
+
+      ec2 = AWS::EC2.new(
+          :access_key_id => $config[ "AWS" ][ "AccessKeyId" ],
+          :secret_access_key => $config[ "AWS" ][ "SecretAccessKey" ] )
 
       hosts = {}
 
       # used if no name is given
       count = 0
 
-      $ec2.instances.each do | h |
+      ec2.instances.each do | h |
         name = h.tags[ "Name" ]
 
         if name.nil? || name.empty?
@@ -37,14 +39,6 @@ namespace "hosts" do
 
       host_file = File.join( tmp_dir, 'hosts.json' )
       File.open( host_file, 'w' ) { | f |  f.write( hosts.to_json ) }
-    end
-
-    def aws_config
-      raise IOError, "config not loaded"  if !defined? $config
-
-      $ec2 = AWS::EC2.new(
-          :access_key_id => $config[ "AWS" ][ "AccessKeyId" ],
-          :secret_access_key => $config[ "AWS" ][ "SecretAccessKey" ] )
     end
   end
 end

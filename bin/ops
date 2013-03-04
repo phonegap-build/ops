@@ -12,19 +12,17 @@ bootstrap_files = [
 Rake.application.init( File.basename( $0 ) )
 
 begin
-  Dir.chdir( Ops::root_dir ) do
-    bootstrap_files.each do | f |
-      require f
-    end
+  bootstrap_files.each do | f |
+    File.join Ops::root_dir, f
+    require f
   end
 rescue => e
   puts e
 end
 
-Dir.chdir( Ops::pwd_dir ) do
-  bootstrap_files.each do | f |
-    require f if File.exists? f
-  end
+bootstrap_files.each do | f |
+  File.join Ops::pwd_dir, f
+  require f if File.exists? f
 end
 
 begin
