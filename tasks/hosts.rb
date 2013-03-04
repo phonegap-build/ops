@@ -91,8 +91,4 @@ namespace "hosts" do
       exit_failure( "Error parsing config file: #{ config_file }." )
     end
   end
-
-  def exit_failure( reason="", code=1 )
-    puts reason; exit
-  end
 end

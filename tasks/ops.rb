@@ -19,7 +19,10 @@ end
 
 ## Load configuration
 
-hosts_file = File.join( pwd_dir, 'hosts.json' )
+host_files = [
+  File.join( pwd_dir, 'hosts.json' ),
+  File.join( pwd_dir, 'tmp', 'hosts.json' ) ]
+
 config_file = File.join( pwd_dir, 'config.json' )
 
 $hosts = {} unless defined? $hosts
@@ -41,30 +44,29 @@ end
 
 ## Load Hosts
 
-if ( File.exists? hosts_file )
+host_files.each do | hosts_file |
+  if ( File.exists? hosts_file )
 
-  raw_hosts = File.read( hosts_file )
+    raw_hosts = File.read( hosts_file )
 
-  json = {}
+    json = {}
 
-  begin
-    json = JSON.parse raw_hosts
-  rescue => e
-    exit_failure( "Error: #{ e.message }" )
-  end
+    begin
+      json = JSON.parse raw_hosts
+    rescue => e
+      exit_failure( "Error: #{ e.message }" )
+    end
 
-  json.each do | h, i |
-    class_name = i[ "Type" ]
-    puts Host.const_get( class_name )
-    #$hosts[ h ] = Host::Default.new( h, i, $config )
+    json.each do | h, i |
+      class_name = i[ "Type" ]
+      $hosts[ h ] = Host.const_get( class_name ).new( h, i, $config )
+    end
   end
 end
 
 ## Host Tasks
 
 $hosts.each do | i, host |
-
-  next unless host.type == :default
 
   namespace host.alias do
 
