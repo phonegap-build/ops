@@ -1,8 +1,12 @@
+require 'lib/version.rb'
+
 files = `git ls-files`.split("\n")
 
 Gem::Specification.new do |s|
   s.name        = 'Ops'
-  s.version     = '0.0.1'
+
+  s.version     = Ops::version
+
   s.date        = Time.new
 
   s.summary     = "Ops tool for remote servers"

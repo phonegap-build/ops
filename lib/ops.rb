@@ -18,6 +18,7 @@ end
   require 'aws-sdk'
 
 # local includes
+  require 'version'
   require 'host/default'
   require 'host/e_c_2'
   require 'ops/common'
