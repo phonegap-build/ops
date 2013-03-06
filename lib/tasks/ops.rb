@@ -11,7 +11,7 @@ task "init" do
   name = ENV[ 'name' ]
   fail I18n.t( "ops.init.no_name" ) if name.nil? || name.empty?
 
-  FileUtils.cp_r( File.join( root_dir, "res", "samples", "default" ),
+  FileUtils.cp_r( File.join( Ops::root_dir, "res", "samples", "default" ),
     File.join( Ops::pwd_dir, name ) )
 end
 
@@ -68,11 +68,14 @@ end
 
 $hosts.each do | i, host |
 
-  namespace host.alias do
+  namespace "hosts" do
 
-    desc I18n.t( "host.ssh", :host => host.alias )
-    task "ssh" do
-      host.shell!
+    namespace host.alias do
+
+      desc I18n.t( "host.ssh", :host => host.alias )
+      task "ssh" do
+        host.shell!
+      end
     end
   end
 end

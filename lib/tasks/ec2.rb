@@ -5,7 +5,6 @@ namespace "hosts" do
     ## Sync EC2 Hosts
     desc "hosts.sync"
     task "sync" do
-
       ec2 = AWS::EC2.new(
           :access_key_id => $config[ "AWS" ][ "AccessKeyId" ],
           :secret_access_key => $config[ "AWS" ][ "SecretAccessKey" ] )
@@ -41,7 +40,9 @@ namespace "hosts" do
       File.open( host_file, 'w' ) { | f |  f.write( hosts.to_json ) }
 
       if Ops::has_bash?
-        `source #{ File.join( root_dir, 'autocomplete' ) }`
+        bash = `which bash`.strip
+        `#{ bash } -c "source #{
+          File.join( Ops::root_dir, 'autocomplete' ) }"`
       end
     end
   end
