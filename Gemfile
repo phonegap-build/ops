@@ -6,3 +6,7 @@ gem "net-ssh"
 gem "aws-sdk"
 gem "i18n"
 gem "rake"
+
+group :development do
+  gem "rspec-core"
+end
