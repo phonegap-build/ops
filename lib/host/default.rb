@@ -1,16 +1,17 @@
 module Host
   class Default
 
-    attr_reader :alias, :host_name, :ssh_pem, :user
+    attr_reader :alias, :host_name, :ssh_pem, :user, :tags
 
     def initialize( host = 'unspecified', info = {}, opts = {} )
       @alias = host
 
-      @ssh_host = info[ "HostName" ] || nil
-      @ssh_user = info[ "User" ] || Etc.getlogin
+      @host_name = info[ "HostName" ] || nil
+      @user = info[ "User" ] || Etc.getlogin
       @ssh_pem = info[ "IdentityFile" ] || nil
       @ssh_port = info[ "Port" ] || nil
       @type = info[ "Type" ] || :default
+      @tags = info[ "Tags" ] || {}
       @pem_dirs = opts[ "IdentityLocations" ] || nil
     end
 
@@ -18,12 +19,19 @@ module Host
       @type.to_sym
     end
 
-    def user
-      @ssh_user
+    def tags=( tags )
+      raise IOError, "tags must be a hash" unless tags.kind_of?( Hash )
+      @tags = tags
     end
 
-    def host_name
-      @ssh_host
+    def matches?( tags )
+      tags.each do | tag, value |
+        unless @tags.has_key?( tag ) && @tags[ tag ] == value
+          return false
+        end
+      end
+
+      true
     end
 
     def ssh_pem
@@ -49,10 +57,10 @@ module Host
     def shell!( opts = nil )
       ssh_cmd = [ "ssh" ]
 
-      raise( IOError, "Error: HostName invalid." ) if @ssh_host.nil?
+      raise( IOError, "Error: HostName invalid." ) if @host_name.nil?
 
-      ssh_cmd << [ "-l", @ssh_user ]
-      ssh_cmd << @ssh_host
+      ssh_cmd << [ "-l", @user ]
+      ssh_cmd << @host_name
 
       pem = ssh_pem
       ssh_cmd << [ "-i", pem ] unless pem.nil?

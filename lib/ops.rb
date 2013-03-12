@@ -19,6 +19,7 @@ end
 
 # local includes
   require 'version'
+  require 'host/list'
   require 'host/default'
   require 'host/e_c_2'
   require 'ops/common'
