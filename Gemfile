@@ -8,5 +8,5 @@ gem "i18n"
 gem "rake"
 
 group :development do
-  gem "rspec-core"
+  gem "rspec"
 end
