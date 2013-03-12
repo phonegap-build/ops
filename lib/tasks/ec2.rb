@@ -22,7 +22,7 @@ namespace "hosts" do
           count += 1
         end
 
-        ip = h.ip_address || "stopped"
+        ip = h.dns_name || "stopped"
 
         puts "Discovered: #{ name } -> #{ ip }"
 
@@ -30,6 +30,7 @@ namespace "hosts" do
           "HostName" => ip,
           "User" => h.tags[ "User" ],
           "IdentityFile" => h.key_name,
+          "Tags" => h.tags.to_h.to_hash,
           "Type" => "EC2" }
       end
 
