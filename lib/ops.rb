@@ -22,6 +22,7 @@ end
   require 'host/default'
   require 'host/e_c_2'
   require 'ops/common'
+  require 'ops/console'
 
 # load all i18n strings
 string_search = File.join( Ops::root_dir, "res", "strings/**/*.yml" )
