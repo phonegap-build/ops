@@ -7,6 +7,8 @@ en:
     init:
       desc: "Initialize a new project"
       no_name: "project name not provided"
+    version:
+      desc: "Print version number"
 
   host:
     ssh: "SSH into %{host}"
