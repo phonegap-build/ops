@@ -7,7 +7,7 @@ def exit_failure( reason="", code=1 )
 end
 
 bootstrap_files = [
-  File.join( 'tasks', 'tasks.rb' ) ]
+  File.join( 'tasks', 'init.rb' ) ]
 
 Rake.application.init( File.basename( $0 ) )
 
