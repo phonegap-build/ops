@@ -21,7 +21,7 @@ rescue => e
 end
 
 bootstrap_files.each do | f |
-  File.join Ops::pwd_dir, f
+  f = File.join Ops::pwd_dir, f
   require f if File.exists? f
 end
 
