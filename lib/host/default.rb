@@ -26,8 +26,18 @@ module Host
 
     def matches?( tags )
       tags.each do | tag, value |
-        unless @tags.has_key?( tag ) && @tags[ tag ] == value
-          return false
+        is_regex = value.match( /^\/(.*)\/$/ )
+
+        if is_regex
+          regex = Regexp.new( is_regex[ 1 ] )
+
+          unless @tags.has_key?( tag ) && @tags[ tag ].match( regex )
+            return false
+          end
+        else
+          unless @tags.has_key?( tag ) && @tags[ tag ] == value
+            return false
+          end
         end
       end
 
