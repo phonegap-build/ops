@@ -3,7 +3,7 @@ require 'lib/version.rb'
 files = `git ls-files`.split("\n")
 
 Gem::Specification.new do |s|
-  s.name        = 'Ops'
+  s.name        = 'Devops'
 
   s.version     = Ops::version
 
