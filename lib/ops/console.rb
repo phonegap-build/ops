@@ -43,3 +43,11 @@ end
 class Color
   extend Ops::Console
 end
+
+class String
+  extend Ops::Console
+
+  def error
+    replace Color.print( self , [ :bold, :red ] )
+  end
+end

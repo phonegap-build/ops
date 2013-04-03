@@ -82,41 +82,54 @@ module Host
       end
     end
 
-    def shell_exec! command
+    def shell_exec!( command, opts = {} )
       ssh_pem
 
       options = { :keys => ssh_pem }
 
       color = Color.random_color
 
-      Net::SSH.start( host_name, user, options ) do | s |
+      begin
+        Net::SSH.start( host_name, user, options ) do | s |
 
-        channel = s.open_channel do |ch|
-          ch.exec( command ) do | ch, success |
-            raise( IOError,
-              "#{ host_name } > could not execute command" ) unless
-                success
-
-            ch.on_data do | c, data |
-              data.split("\n").each do | line |
-                puts "#{ Color.print(
-                  self.alias, [ :bold, color ] ) } > #{ line }"
+          channel = s.open_channel do |ch|
+            channel.request_pty do |ch, success|
+              if success
+                puts "pty successfully obtained"
+              else
+                puts "could not obtain pty"
               end
-            end
+            end if opts.has_key? :pty
 
-            ch.on_extended_data do |c, type, data|
-              data.split("\n").each do | line |
-                puts "#{ Color.print(
-                  self.alias, [ :bold, color ] ) } > #{ line }"
+            ch.exec( command ) do | ch, success |
+              raise( IOError,
+                "#{ host_name } > could not execute command" ) unless
+                  success
+
+              ch.on_data do | c, data |
+                data.split("\n").each do | line |
+                  puts "#{ Color.print(
+                    self.alias, [ :bold, color ] ) } > #{ line }"
+                end
               end
-            end
 
-            ch.on_close do
-              puts "#{ Color.print(
-                self.alias, [ :bold, color ] ) } > COMMAND finished"
+              ch.on_extended_data do |c, type, data|
+                data.split("\n").each do | line |
+                  puts "#{ Color.print(
+                    self.alias, [ :bold, color ] ) } > #{ line }"
+                end
+              end
+
+              ch.on_close do
+                puts "#{ Color.print(
+                  self.alias, [ :bold, color ] ) } > COMMAND finished"
+              end
+
             end
           end
         end
+      rescue => e
+        puts "Error: #{ self.alias } > #{ e.message }".error
       end
     end
   end
