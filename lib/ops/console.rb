@@ -35,7 +35,7 @@ module Ops
     def random_color
       colors = COLORS.keys + BG_COLORS.keys
       colors.reject!{ | c | [ :white, :black ].include? c }
-      colors.choice
+      colors.sample
     end
   end
 end
