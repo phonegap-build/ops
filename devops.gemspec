@@ -1,4 +1,4 @@
-require 'lib/version.rb'
+require './lib/version.rb'
 
 files = `git ls-files`.split("\n")
 
