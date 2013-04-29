@@ -50,4 +50,8 @@ class String
   def error
     replace Color.print( self , [ :bold, :red ] )
   end
+
+  def warning
+    replace Color.print( self , [ :bold, :yellow ] )
+  end
 end

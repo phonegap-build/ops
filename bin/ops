@@ -11,6 +11,10 @@ bootstrap_files = [
 
 Dir.chdir Ops::pwd_dir do
 
+  unless Ops::pwd_dir == Dir.pwd
+    puts "Executing from ( #{ Ops::pwd_dir } )".warning
+  end
+
   Rake.application.init( File.basename( $0 ) )
 
   begin

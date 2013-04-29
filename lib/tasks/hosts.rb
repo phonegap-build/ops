@@ -21,7 +21,17 @@ namespace "hosts" do
     host = ENV[ 'host' ]
     user = ENV[ 'user' ]
     type = ENV[ 'type' ] || "default"
-    identity = File.basename( ENV[ 'identity' ] )
+    identity = nil
+    tags = {}
+
+    unless ENV[ 'identity' ].nil?
+      identity = File.basename( ENV[ 'identity' ] )
+    end
+
+    unless ENV[ 'tags' ].nil?
+      tags = File.basename( ENV[ 'tags' ] )
+      tags = JSON.parse( tags )
+    end
 
 
     puts "Adding host: #{ host }"
@@ -31,7 +41,9 @@ namespace "hosts" do
     hosts = {}
     hosts_file = File.join( pwd, "hosts.json" )
 
-    hosts = Ops::read_hosts
+    if File.exists? hosts_file
+      hosts = JSON.parse( File.read( hosts_file ) )
+    end
 
     exit_failure( "Error: #{ host } is already defined" ) if
       hosts.has_key? host
@@ -40,7 +52,8 @@ namespace "hosts" do
       'HostName' => hostname,
       'User' => user,
       'IdentityFile' => identity,
-      "Type" => "type"
+      "Type" => "type",
+      "Tags" => tags
     }
     
     File.open( hosts_file, 'w' ) { | f | f.write( hosts.to_json ) }
