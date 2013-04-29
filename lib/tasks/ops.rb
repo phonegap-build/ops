@@ -1,6 +1,5 @@
 task "default" do
-  Rake.application.options.show_task_pattern = //
-  Rake.application.display_tasks_and_comments()
+  puts "run ops -T for a full list of commands"
 end
 
 desc I18n.t( "ops.version.desc" )

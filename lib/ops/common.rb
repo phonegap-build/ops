@@ -6,7 +6,10 @@ module Ops
   end
 
   def self.pwd_dir
-    Dir.pwd
+    Pathname.new( Dir.pwd ).ascend do | p |
+      return p if File.exists? File.join( p, 'config.json' )
+    end 
+    nil
   end
 
   def self.has_bash?
