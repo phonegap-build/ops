@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'Ops'
+require 'ops'
 
 def exit_failure( reason="", code=1 )
   puts reason; exit
