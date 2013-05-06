@@ -21,4 +21,8 @@ Gem::Specification.new do |s|
   s.bindir = 'bin'
   s.require_paths = ["lib"]
   s.executables = [ 'ops' ]
+
+  s.add_dependency('bundler')
+  s.add_dependency('i18n')
+  s.add_dependency('aws-sdk')
 end
