@@ -25,4 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency('bundler')
   s.add_dependency('i18n')
   s.add_dependency('aws-sdk')
+  s.add_dependency('net-ssh')
+  s.add_dependency('json')
+  s.add_dependency('rake')
 end
