@@ -54,4 +54,8 @@ class String
   def warning
     replace Color.print( self , [ :bold, :yellow ] )
   end
+
+  def bold
+    replace Color.print( self , [ :bold ] )
+  end
 end

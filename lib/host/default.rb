@@ -82,9 +82,22 @@ module Host
       end
     end
 
-    def shell_exec!( command, opts = {} )
-      ssh_pem
+    def scp_to_host( src, dest )
+      scp_cmd = [ "scp" ]
 
+      raise( IOError, "Error: HostName invalid." ) if @host_name.nil?
+
+      scp_cmd << [ "-i", ssh_pem ] unless ssh_pem.nil?
+      scp_cmd << "#{ src } #{ @user }@#{ @host_name }:#{ dest }"
+
+      begin
+        `#{ scp_cmd.join(" ") }`
+      rescue => e
+        raise( IOError,  "Could not call scp. #{ e.message }" )
+      end
+    end
+
+    def shell_exec!( command, opts = {} )
       options = { :keys => ssh_pem }
 
       color = Color.random_color
