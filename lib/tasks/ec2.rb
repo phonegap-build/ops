@@ -14,25 +14,37 @@ namespace "hosts" do
       # used if no name is given
       count = 0
 
-      ec2.instances.each do | h |
-        name = h.tags[ "Name" ]
+      response = ec2.client.describe_instances
+
+      response[:instance_index].each do | instance |
+
+        h = instance[1]
+
+        tags = {}
+        h[:tag_set].each { |tag|
+          tags[tag[:key]] = tag[:value]
+        }
+
+        name = tags["Name"]
 
         if name.nil? || name.empty?
           name = "noname-#{ count }"
           count += 1
         end
 
-        ip = h.dns_name || "stopped"
+        ip = h[:dns_name] || "stopped"
 
         puts "Discovered: #{ name } -> #{ ip }"
 
         hosts[ name ] = {
           "HostName" => ip,
-          "User" => h.tags[ "User" ],
-          "IdentityFile" => h.key_name,
-          "Tags" => h.tags.to_h.to_hash,
+          "User" => tags["User"],
+          "IdentityFile" => h[:key_name],
+          "Tags" => tags,
           "Type" => "EC2" }
       end
+
+      puts "Synced #{hosts.count} instances"
 
       tmp_dir = File.join( Ops::pwd_dir, 'tmp' )
       Dir.mkdir( tmp_dir ) unless File.directory? tmp_dir
