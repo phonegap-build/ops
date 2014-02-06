@@ -55,10 +55,6 @@ module Host
              ssh_pem = glob.first unless glob.empty?
           end
         end
-
-        raise( IOError,
-          "Error: pem - #{ ssh_pem } not found or not accessable." ) unless
-            File.stat( ssh_pem )
       end
 
       ssh_pem
