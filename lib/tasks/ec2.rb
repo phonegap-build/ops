@@ -32,6 +32,11 @@ namespace "hosts" do
           count += 1
         end
 
+        if hosts[ name ]
+          name = "#{name}.#{ count }"
+          count += 1
+        end
+
         ip = h[:dns_name] || "stopped"
 
         puts "Discovered: #{ name } -> #{ ip }"
