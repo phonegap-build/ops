@@ -18,6 +18,7 @@ end
   require 'aws-sdk'
 
 # local includes
+  $: << File.dirname(__FILE__)
   require 'version'
   require 'host/list'
   require 'host/default'
@@ -26,6 +27,7 @@ end
   require 'ops/console'
 
 # load all i18n strings
+I18n.enforce_available_locales = true
 string_search = File.join( Ops::root_dir, "res", "strings/**/*.yml" )
 string_files = Dir[ string_search ]
 I18n.load_path << string_files

@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'devops'
+require_relative '../lib/devops'
 
 def exit_failure( reason="", code=1 )
   puts reason; exit

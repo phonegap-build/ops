@@ -25,9 +25,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws-sdk
+  aws-sdk (< 2.0)
   i18n
   json
   net-ssh
   rake
   rspec
+
+BUNDLED WITH
+   1.10.6
