@@ -20,6 +20,8 @@ namespace "hosts" do
 
         h = instance[1]
 
+        next if h[:instance_state][:code] == 48 # skip if instance terminated
+
         tags = {}
         h[:tag_set].each { |tag|
           tags[tag[:key]] = tag[:value]
