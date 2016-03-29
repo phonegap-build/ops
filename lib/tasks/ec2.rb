@@ -39,7 +39,7 @@ namespace "hosts" do
           count += 1
         end
 
-        ip = h[:dns_name] || "stopped"
+        ip = h[:private_dns_name] || "stopped"
 
         puts "Discovered: #{ name } -> #{ ip }"
 
@@ -58,7 +58,8 @@ namespace "hosts" do
 
       host_file = File.join( tmp_dir, 'hosts.json' )
       File.open( host_file, 'w' ) { | f |  f.write( hosts.to_json ) }
-
+      autocomplete_cache_file = "#{Ops::pwd_dir}/.autocomplete_cache"
+      FileUtils.rm(autocomplete_cache_file) if File.exists?(autocomplete_cache_file) 
       if Ops::has_bash?
         bash = `which bash`.strip
         `#{ bash } -c "source #{

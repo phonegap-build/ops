@@ -28,6 +28,6 @@ end
 
 # load all i18n strings
 I18n.enforce_available_locales = true
-string_search = File.join( Ops::root_dir, "res", "strings/**/*.yml" )
-string_files = Dir[ string_search ]
+string_search = File.join( __FILE__, "..", "..", "res", "strings/**/*.yml" )
+string_files = Dir[ File.expand_path(string_search) ]
 I18n.load_path << string_files

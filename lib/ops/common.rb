@@ -1,14 +1,11 @@
 module Ops
 
   def self.root_dir
-    File.expand_path(
-      File.join( File.dirname( __FILE__ ), "..", ".." ) )
+    File.expand_path(File.join( $0, "..", ".." ))
   end
 
   def self.pwd_dir
-    Pathname.new( Dir.pwd ).ascend do | p |
-      return p if File.exists? File.join( p, 'config.json' )
-    end 
+    return root_dir if File.exists?(File.join( root_dir, 'config.json'))
     nil
   end
 
