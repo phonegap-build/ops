@@ -1,7 +1,12 @@
 {
-  "IdentityLocations" : [ "~/.ssh" ],
+  "IdentityLocations" : [ "~/.ssh" ],  
   "AWS" : {
     "AccessKeyId" : "",
-    "SecretAccessKey" : ""
-  }
+    "SecretAccessKey" : "",
+    "Region" : "",
+    "InstanceOpts": {
+  	  "filters": [{ "name": "tag:TagName", "values": ["TagValue"] }]
+  	}
+  },
+  "SSH" : { "verbose" : true }
 }

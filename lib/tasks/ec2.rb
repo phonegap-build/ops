@@ -5,51 +5,69 @@ namespace "hosts" do
     ## Sync EC2 Hosts
     desc "hosts.sync"
     task "sync" do
-      ec2 = AWS::EC2.new(
-          :access_key_id => $config[ "AWS" ][ "AccessKeyId" ],
-          :secret_access_key => $config[ "AWS" ][ "SecretAccessKey" ] )
+
+      opts = { }
+      instance_opts = { }
+      if $config[ "AWS" ]
+        opts[:access_key_id] = $config[ "AWS" ][ "AccessKeyId" ] if $config[ "AWS" ][ "AccessKeyId" ]
+        opts[:secret_access_key] = $config[ "AWS" ][ "SecretAccessKey" ] if $config[ "AWS" ][ "SecretAccessKey" ]
+        opts[:region] = $config[ "AWS" ][ "Region" ] if $config[ "AWS" ][ "Region" ]
+        instance_opts = $config[ "AWS" ][ "InstanceOpts" ] if $config[ "AWS" ][ "InstanceOpts" ]
+      end
+
+      ec2 = Aws::EC2::Client.new(opts)
 
       hosts = {}
 
       # used if no name is given
-      count = 0
+      host_count = {}
 
-      response = ec2.client.describe_instances
+      response = ec2.describe_instances(instance_opts)
 
-      response[:instance_index].each do | instance |
+      response[:reservations].each do |reservation|
+        reservation[:instances].each do |instance|
 
-        h = instance[1]
+          h = instance
 
-        next if h[:instance_state][:code] == 48 # skip if instance terminated
+          next if h.state.code != 16 # skip if instance not running
 
-        tags = {}
-        h[:tag_set].each { |tag|
-          tags[tag[:key]] = tag[:value]
-        }
+          tags = {}
+          h.tags.each { |tag|
+            tags[tag[:key]] = tag[:value]
+          }
 
-        name = tags["Name"]
+          name = tags["Name"]
 
-        if name.nil? || name.empty?
-          name = "noname-#{ count }"
-          count += 1
+          if name.nil? || name.empty?
+            name = h.private_dns_name
+          end
+
+          idx = host_count[ name ] || 1
+          host_count[ name ] = idx + 1
+          name = "#{name}.#{idx}"
+
+          tags['Name'] = name
+          
+          ip = h[:private_dns_name]
+
+          hosts[ name ] = {
+            "HostName" => ip,
+            "User" => tags["User"],
+            "IdentityFile" => h[:key_name],
+            "Tags" => tags,
+            "Type" => "EC2" 
+          }
         end
-
-        if hosts[ name ]
-          name = "#{name}.#{ count }"
-          count += 1
-        end
-
-        ip = h[:private_dns_name] || "stopped"
-
-        puts "Discovered: #{ name } -> #{ ip }"
-
-        hosts[ name ] = {
-          "HostName" => ip,
-          "User" => tags["User"],
-          "IdentityFile" => h[:key_name],
-          "Tags" => tags,
-          "Type" => "EC2" }
       end
+
+      hosts.each { |key|
+        if key[0] =~ /\.1$/
+          base_name = key[0][0..key[0].length-3]
+          count = hosts.count {|a| a[0] =~ /^#{base_name}.2/ }
+          key[0] = base_name if count == 0
+        end
+        puts "Discovered: #{ key[0] } -> #{ key[1]['HostName'] }"
+      }
 
       puts "Synced #{hosts.count} instances"
 

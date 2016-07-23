@@ -63,6 +63,10 @@ module Host
     def shell!( opts = nil )
       ssh_cmd = [ "ssh" ]
 
+      if $config['SSH'] && $config['SSH']['verbose']
+        ssh_cmd << "-v"
+      end
+
       raise( IOError, "Error: HostName invalid." ) if @host_name.nil?
 
       ssh_cmd << [ "-l", @user ]
