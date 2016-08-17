@@ -1,7 +1,7 @@
 module Host
   class Default
 
-    attr_reader :alias, :host_name, :ssh_pem, :user, :tags
+    attr_reader :alias, :host_name, :ssh_pem, :user, :tags, :instance_id
 
     def initialize( host = 'unspecified', info = {}, opts = {} )
       @alias = host
@@ -11,6 +11,7 @@ module Host
       @ssh_pem = info[ "IdentityFile" ] || nil
       @ssh_port = info[ "Port" ] || nil
       @type = info[ "Type" ] || :default
+      @instance_id = info[ "Instance-Id" ] || nil
       @tags = info[ "Tags" ] || {}
       @pem_dirs = opts[ "IdentityLocations" ] || nil
     end
