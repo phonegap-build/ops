@@ -55,7 +55,8 @@ namespace "hosts" do
             "User" => tags["User"],
             "IdentityFile" => h[:key_name],
             "Tags" => tags,
-            "Type" => "EC2" 
+            "Type" => "EC2",
+            "Instance-Id" => h[:instance_id]
           }
         end
       end
