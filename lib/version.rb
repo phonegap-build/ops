@@ -1,6 +1,6 @@
 module Ops
 
   def self.version
-    "0.3.2"
+    "0.4.0"
   end
 end

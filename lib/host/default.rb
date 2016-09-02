@@ -61,7 +61,7 @@ module Host
       ssh_pem
     end
 
-    def shell!( opts = nil )
+    def shell!( command=nil, opts={} )
       ssh_cmd = [ "ssh" ]
 
       if $config['SSH'] && $config['SSH']['verbose']
@@ -75,6 +75,11 @@ module Host
 
       pem = ssh_pem
       ssh_cmd << [ "-i", pem ] unless pem.nil?
+
+      if command
+        ssh_cmd << "-t" if opts[:pty]
+        ssh_cmd << "'bash -lc \"#{command}\"'"
+      end
 
       begin
         exec( ssh_cmd.join(" ") )
@@ -108,9 +113,7 @@ module Host
 
           channel = s.open_channel do |ch|
             channel.request_pty do |ch, success|
-              if success
-                puts "pty successfully obtained"
-              else
+              if !success
                 puts "could not obtain pty"
               end
             end if opts.has_key? :pty
@@ -138,9 +141,9 @@ module Host
                 puts "#{ Color.print(
                   self.alias, [ :bold, color ] ) } > COMMAND finished"
               end
-
             end
           end
+          channel.wait
         end
       rescue => e
         puts "Error: #{ self.alias } > #{ e.message }".error

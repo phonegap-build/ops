@@ -1,17 +1,17 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    aws-sdk (2.5.4)
-      aws-sdk-resources (= 2.5.4)
-    aws-sdk-core (2.5.4)
+    aws-sdk (2.5.8)
+      aws-sdk-resources (= 2.5.8)
+    aws-sdk-core (2.5.8)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.5.4)
-      aws-sdk-core (= 2.5.4)
+    aws-sdk-resources (2.5.8)
+      aws-sdk-core (= 2.5.8)
     diff-lcs (1.2.5)
     i18n (0.7.0)
     jmespath (1.3.1)
     json (2.0.2)
-    net-ssh (2.9.4)
+    net-ssh (3.2.0)
     rake (11.2.2)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
@@ -34,7 +34,7 @@ DEPENDENCIES
   aws-sdk
   i18n
   json
-  net-ssh (< 3)
+  net-ssh
   rake
   rspec
 

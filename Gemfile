@@ -1,9 +1,9 @@
 # A sample Gemfile
 source "https://rubygems.org"
-ruby '~>2.3'
+ruby '~>2.3.1'
 
 gem "json"
-gem "net-ssh", "<3"
+gem "net-ssh"
 gem 'aws-sdk'
 gem "i18n"
 gem "rake"

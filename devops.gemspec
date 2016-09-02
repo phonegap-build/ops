@@ -13,14 +13,14 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/hardeep/ops'
   s.files       = files
   s.licenses    = "MIT"
-  s.required_ruby_version = '~> 2.3'
+  s.required_ruby_version = '~> 2.3.1'
   s.bindir = 'bin'
   s.require_paths = ["lib"]
   s.executables = [ 'ops' ]
-  s.add_dependency('bundler', '~>1.12')
-  s.add_dependency('i18n', '~>0.7')
-  s.add_dependency('aws-sdk', '~>2.4')
-  s.add_dependency('net-ssh', '<3')
-  s.add_dependency('json', '~>2.0')
-  s.add_dependency('rake', '~>11.2')
+  s.add_dependency('bundler', '~>1.12.5')
+  s.add_dependency('i18n', '~>0.7.0')
+  s.add_dependency('aws-sdk', '~>2.5.8')
+  s.add_dependency('net-ssh', '~>3.2.0')
+  s.add_dependency('json', '~>2.0.2')
+  s.add_dependency('rake', '~>11.2.2')
 end
