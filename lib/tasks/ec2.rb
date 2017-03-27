@@ -46,6 +46,7 @@ namespace "hosts" do
           host_count[ name ] = idx + 1
           name = "#{name}.#{idx}"
 
+          tags['OriginalName'] = tags['Name']
           tags['Name'] = name
           
           ip = h[:private_dns_name]

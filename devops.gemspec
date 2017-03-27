@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.bindir = 'bin'
   s.require_paths = ["lib"]
   s.executables = [ 'ops' ]
-  s.add_dependency('bundler', '~>1.12.5')
+  s.add_dependency('bundler')
   s.add_dependency('i18n', '~>0.7.0')
   s.add_dependency('aws-sdk', '~>2.5.8')
   s.add_dependency('net-ssh', '~>3.2.0')
