@@ -48,6 +48,7 @@ namespace "hosts" do
 
           tags['OriginalName'] = tags['Name']
           tags['Name'] = name
+          tags['Instance'] = h[:instance_id]
           
           ip = h[:private_dns_name]
 
