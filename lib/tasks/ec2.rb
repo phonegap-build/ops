@@ -24,43 +24,50 @@ namespace "hosts" do
 
       response = ec2.describe_instances(instance_opts)
 
+      raw_instances = []
+
       response[:reservations].each do |reservation|
         reservation[:instances].each do |instance|
-
-          h = instance
-
-          next if h.state.code != 16 # skip if instance not running
-
-          tags = {}
-          h.tags.each { |tag|
-            tags[tag[:key]] = tag[:value]
-          }
-
-          name = tags["Name"]
-
-          if name.nil? || name.empty?
-            name = h.private_dns_name
-          end
-
-          idx = host_count[ name ] || 1
-          host_count[ name ] = idx + 1
-          name = "#{name}.#{idx}"
-
-          tags['OriginalName'] = tags['Name']
-          tags['Name'] = name
-          tags['Instance'] = h[:instance_id]
-          
-          ip = h[:private_dns_name]
-
-          hosts[ name ] = {
-            "HostName" => ip,
-            "User" => tags["User"],
-            "IdentityFile" => h[:key_name],
-            "Tags" => tags,
-            "Type" => "EC2",
-            "Instance-Id" => h[:instance_id]
-          }
+          raw_instances.push(instance)
         end
+      end
+
+      raw_instances.sort_by! { |a,b| a.launch_time }
+
+      raw_instances.each do |instance|
+
+        h = instance
+
+        next if h.state.code != 16 # skip if instance not running
+
+        tags = {}
+        h.tags.each { |tag|
+          tags[tag[:key]] = tag[:value]
+        }
+
+        name = tags["Name"]
+
+        if name.nil? || name.empty?
+          name = h.private_dns_name
+        end
+
+        idx = host_count[ name ] || 1
+        host_count[ name ] = idx + 1
+        name = "#{name}.#{idx}"
+
+        tags['OriginalName'] = tags['Name']
+        tags['Name'] = name
+        
+        ip = h[:private_dns_name]
+
+        hosts[ name ] = {
+          "HostName" => ip,
+          "User" => tags["User"],
+          "IdentityFile" => h[:key_name],
+          "Tags" => tags,
+          "Type" => "EC2",
+          "Instance-Id" => h[:instance_id]
+        }
       end
 
       hosts.each { |key|
