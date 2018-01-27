@@ -138,8 +138,7 @@ module Host
               end
 
               ch.on_close do
-                puts "#{ Color.print(
-                  self.alias, [ :bold, color ] ) } > COMMAND finished"
+                puts "#{ Color.print(self.alias, [ :bold, color ] ) } > -"
               end
             end
           end
