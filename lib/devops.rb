@@ -15,7 +15,7 @@ end
   require 'net/ssh'
   require 'i18n'
   require 'rake'
-  require 'aws-sdk'
+  require 'aws-sdk-ec2'
 
 # local includes
   $: << File.dirname(__FILE__)

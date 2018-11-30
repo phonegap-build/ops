@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.executables = [ 'ops' ]
   s.add_dependency('bundler')
   s.add_dependency('i18n', '~>0.7.0')
-  s.add_dependency('aws-sdk', '>0')
+  s.add_dependency('aws-sdk-ec2', '~>1.62.0')
   s.add_dependency('net-ssh', '~>3.2.0')
   s.add_dependency('json', '~>2.0.2')
   s.add_dependency('rake', '~>11.2.2')
