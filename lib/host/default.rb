@@ -96,8 +96,31 @@ module Host
       scp_cmd << [ "-i", ssh_pem ] unless ssh_pem.nil?
       scp_cmd << "#{ src } #{ @user }@#{ @host_name }:#{ dest }"
 
+      color = Color.random_color
+
       begin
+        puts "#{ Color.print(self.alias, [ :bold, color ] ) } > uploading #{src} to #{dest}"
         `#{ scp_cmd.join(" ") }`
+        puts "#{ Color.print(self.alias, [ :bold, color ] ) } > -"
+      rescue => e
+        raise( IOError,  "Could not call scp. #{ e.message }" )
+      end
+    end
+
+    def scp_from_host( src, dest )
+      scp_cmd = [ "scp" ]
+
+      raise( IOError, "Error: HostName invalid." ) if @host_name.nil?
+
+      scp_cmd << [ "-i", ssh_pem ] unless ssh_pem.nil?
+      scp_cmd << "#{ @user }@#{ @host_name }:#{ src } #{ dest } "
+
+      color = Color.random_color
+
+      begin
+        puts "#{ Color.print(self.alias, [ :bold, color ] ) } > downloading #{src} to #{dest}"
+        `#{ scp_cmd.join(" ") }`
+        puts "#{ Color.print(self.alias, [ :bold, color ] ) } > -"
       rescue => e
         raise( IOError,  "Could not call scp. #{ e.message }" )
       end
