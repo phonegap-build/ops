@@ -1,6 +1,6 @@
 module Ops
 
   def self.version
-    "0.5.5"
+    "0.5.6"
   end
 end

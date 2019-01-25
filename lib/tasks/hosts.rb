@@ -4,7 +4,7 @@ namespace "hosts" do
   task "list" do
     hosts = Ops::read_hosts
     hosts.each do | i, h |
-      puts "#{ h.alias }"
+      puts "#{ h.alias } -> #{h.host_name} #{h.instance_id}"
     end
   end
 
