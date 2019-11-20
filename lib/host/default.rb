@@ -167,8 +167,10 @@ module Host
           end
           channel.wait
         end
+        true
       rescue => e
         puts "Error: #{ self.alias } > #{ e.message }".error
+        false
       end
     end
   end
